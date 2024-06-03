@@ -628,7 +628,16 @@ require('lazy').setup({
       }
     end,
   },
-
+  {
+    'Exafunction/codeium.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'hrsh7th/nvim-cmp',
+    },
+    config = function()
+      require('codeium').setup {}
+    end,
+  },
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -783,6 +792,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'codeium' },
         },
       }
     end,
@@ -794,19 +804,25 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
-    -- priority = 1000, -- Make sure to load this before all the other start plugins.
+    priority = 1000,
 
     init = function()
-      -- vim.cmd.colorscheme 'tokyonight-night'
       -- You can configure highlights by doing something like:
       -- vim.cmd.hi 'Comment gui=none'
+      require('tokyonight').setup {
+        style = 'night',
+        on_colors = function(colors)
+          colors.bg = '#000000'
+        end,
+      }
+      vim.cmd.colorscheme 'tokyonight'
     end,
   },
   {
     'olimorris/onedarkpro.nvim',
-    priority = 1000,
+    -- priority = 1000,
     init = function()
-      vim.cmd.colorscheme 'onedark_dark'
+      -- vim.cmd.colorscheme 'onedark_dark'
     end,
   },
   -- Highlight todo, notes, etc in comments
