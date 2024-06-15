@@ -640,7 +640,6 @@ require('lazy').setup({
   },
   { -- Autoformat
     'stevearc/conform.nvim',
-    lazy = false,
     keys = {
       {
         '<leader>f',
@@ -818,13 +817,6 @@ require('lazy').setup({
       vim.cmd.colorscheme 'tokyonight'
     end,
   },
-  {
-    'olimorris/onedarkpro.nvim',
-    -- priority = 1000,
-    init = function()
-      -- vim.cmd.colorscheme 'onedark_dark'
-    end,
-  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -886,7 +878,7 @@ require('lazy').setup({
 
       -- Prefer git instead of curl in order to improve connectivity in some environments
       require('nvim-treesitter.install').prefer_git = true
-      require('nvim-treesitter.install').compilers = { 'clang', 'gcc' }
+      require('nvim-treesitter.install').compilers = { 'gcc' }
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
