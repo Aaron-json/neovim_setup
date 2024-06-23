@@ -611,8 +611,13 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'goimports',
+        'bashls',
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = ensure_installed,
+        auto_update = true,
+      }
 
       require('mason-lspconfig').setup {
         handlers = {
@@ -635,7 +640,9 @@ require('lazy').setup({
       'hrsh7th/nvim-cmp',
     },
     config = function()
-      require('codeium').setup {}
+      require('codeium').setup {
+        enable_chat = true,
+      }
     end,
   },
   { -- Autoformat
@@ -664,6 +671,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'goimports' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -679,8 +687,12 @@ require('lazy').setup({
       'akinsho/toggleterm.nvim',
       version = '*',
       config = function()
-        require('toggleterm').setup()
-        vim.keymap.set('n', 't', '<cmd>ToggleTerm<CR>', { noremap = true, silent = true })
+        require('toggleterm').setup {
+          insert_mappings = false, -- open mapping should not work in insert mode
+          terminal_mappings = false, -- open mapping should not work in terminal mode
+          open_mapping = 't',
+          start_in_insert = false,
+        }
       end,
     },
   },
@@ -812,6 +824,7 @@ require('lazy').setup({
         style = 'night',
         on_colors = function(colors)
           colors.bg = '#000000'
+          colors.comment = colors.blue0
         end,
       }
       vim.cmd.colorscheme 'tokyonight'
