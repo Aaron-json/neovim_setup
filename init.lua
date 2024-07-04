@@ -595,7 +595,9 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
-        --
+        --css
+        cssls = {},
+        css_variables = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -824,7 +826,12 @@ require('lazy').setup({
         style = 'night',
         on_colors = function(colors)
           colors.bg = '#000000'
-          colors.comment = colors.blue0
+          colors.comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
+        end,
+        on_highlights = function(highlights, colors)
+          highlights.DiagnosticUnnecessary = {
+            fg = colors.comment,
+          }
         end,
       }
       vim.cmd.colorscheme 'tokyonight'
