@@ -636,15 +636,9 @@ require('lazy').setup({
     end,
   },
   {
-    'Exafunction/codeium.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'hrsh7th/nvim-cmp',
-    },
+    'supermaven-inc/supermaven-nvim',
     config = function()
-      require('codeium').setup {
-        enable_chat = true,
-      }
+      require('supermaven-nvim').setup {}
     end,
   },
   { -- Autoformat
@@ -805,7 +799,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
-          { name = 'codeium' },
+          { name = 'supermaven' },
         },
       }
     end,
@@ -825,7 +819,7 @@ require('lazy').setup({
       require('tokyonight').setup {
         style = 'night',
         on_colors = function(colors)
-          colors.bg = '#000000'
+          colors.bg = require('tokyonight.util').darken(colors.bg, 0.55, '#000000')
           colors.comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
         end,
         on_highlights = function(highlights, colors)
