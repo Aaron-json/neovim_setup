@@ -92,7 +92,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -101,9 +101,7 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -152,8 +150,11 @@ vim.opt.inccommand = 'split'
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 
+-- show blokc style cursor
+vim.opt.guicursor = 'n-v-c-i:block'
+
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 11
+vim.opt.scrolloff = 9
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -278,22 +279,22 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+      require('which-key').setup {}
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>c', group = '[c]ode' },
+        { '<leader>d', group = '[d]ocument' },
+        { '<leader>r', group = '[r]ename' },
+        { '<leader>f', group = '[f]ind' },
+        { '<leader>w', group = '[w]orkspace' },
+        { '<leader>t', group = '[t]oggle' },
+        { '<leader>h', group = 'Git [h]unk' },
+        {
+          mode = { 'v' },
+          { '<leader>h', group = 'Git [h]unk' },
+        },
       }
-      -- visual mode
-      require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
     end,
   },
 
@@ -356,12 +357,13 @@ require('lazy').setup({
         --
         -- defaults = {
         --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+        --     i = { ['<C-CR>'] = 'to_fuzzy_refine' },
         --   },
-        -- },
+        -- }
+        -- ,
         pickers = {
           buffers = {
-            initial_mode = 'normal',
+            initial_mode = 'insert',
           },
         },
         extensions = {
@@ -377,15 +379,15 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', 'fh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', 'fk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', 'ff', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', 'fs', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', 'fw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', 'fg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', 'fd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', 'fr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', 'fo', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[f]ind [H]elp' })
+      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[f]ind [K]eymaps' })
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[f]ind [F]iles' })
+      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[f]ind [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[f]ind current [W]ord' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[f]ind by [G]rep' })
+      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[f]ind [D]iagnostics' })
+      vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[f]ind [R]esume' })
+      vim.keymap.set('n', '<leader>fo', builtin.oldfiles, { desc = '[f]ind [O]ld Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
@@ -395,7 +397,7 @@ require('lazy').setup({
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = '[/] Fuzzily find in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -404,12 +406,12 @@ require('lazy').setup({
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         }
-      end, { desc = '[S]earch [/] in Open Files' })
+      end, { desc = '[F]ind [/] in Open [B]uffers' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', 'fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      end, { desc = '[F]ind [N]eovim files' })
     end,
   },
 
@@ -598,6 +600,7 @@ require('lazy').setup({
         --css
         cssls = {},
         css_variables = {},
+        marksman = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -613,7 +616,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'goimports',
+        'goimports', -- formar go code with auto imports
         'bashls',
       })
       require('mason-tool-installer').setup {
@@ -638,14 +641,20 @@ require('lazy').setup({
   {
     'supermaven-inc/supermaven-nvim',
     config = function()
-      require('supermaven-nvim').setup {}
+      require('supermaven-nvim').setup {
+        keymaps = {
+          accept_suggestion = '<Tab>',
+          clear_suggestion = '<C-e>',
+          accept_word = '<C-l>',
+        },
+      }
     end,
   },
   { -- Autoformat
     'stevearc/conform.nvim',
     keys = {
       {
-        '<leader>f',
+        '<leader>F',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
@@ -679,18 +688,16 @@ require('lazy').setup({
   },
   -- Terminal
   {
-    {
-      'akinsho/toggleterm.nvim',
-      version = '*',
-      config = function()
-        require('toggleterm').setup {
-          insert_mappings = false, -- open mapping should not work in insert mode
-          terminal_mappings = false, -- open mapping should not work in terminal mode
-          open_mapping = 't',
-          start_in_insert = false,
-        }
-      end,
-    },
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('toggleterm').setup {
+        insert_mappings = false, -- open mapping should not work in insert mode
+        terminal_mappings = false, -- open mapping should not work in terminal mode
+        open_mapping = '<leader>tt', -- Open the terminal with '\'
+        start_in_insert = false,
+      }
+    end,
   },
 
   { -- Autocompletion
@@ -713,12 +720,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -741,18 +748,15 @@ require('lazy').setup({
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
+        -- completion = { completeopt = 'menu,menuone,noinsert' },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
         --
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
-          -- Select the [n]ext item
           ['<C-n>'] = cmp.mapping.select_next_item(),
-          -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
-
           -- Scroll the documentation window [b]ack / [f]orward
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -760,14 +764,8 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
-
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-          ['<Tab>'] = cmp.mapping.select_next_item(),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
+          ['<C-y>'] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Insert, select = true },
+          ['<C-e>'] = cmp.mapping.abort(),
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
@@ -799,7 +797,6 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
-          { name = 'supermaven' },
         },
       }
     end,
@@ -817,9 +814,14 @@ require('lazy').setup({
       -- You can configure highlights by doing something like:
       -- vim.cmd.hi 'Comment gui=none'
       require('tokyonight').setup {
-        style = 'night',
+        transparent = true,
+        styles = {
+          comments = { italic = true },
+          sidebars = 'transparent',
+          floats = 'transparent',
+        },
         on_colors = function(colors)
-          colors.bg = require('tokyonight.util').darken(colors.bg, 0.55, '#000000')
+          -- colors.bg = require('tokyonight.util').darken(colors.bg, 0.55, '#000000')
           colors.comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
         end,
         on_highlights = function(highlights, colors)
@@ -875,7 +877,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -926,7 +928,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
