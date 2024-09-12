@@ -382,26 +382,18 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[f]ind [H]elp' })
       vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[f]ind [K]eymaps' })
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[f]ind [F]iles' })
-      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[f]ind [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>ft', builtin.builtin, { desc = '[f]ind [T]elescope' })
       vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[f]ind current [W]ord' })
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[f]ind by [G]rep' })
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[f]ind [D]iagnostics' })
       vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[f]ind [R]esume' })
       vim.keymap.set('n', '<leader>fo', builtin.oldfiles, { desc = '[f]ind [O]ld Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
-      -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily find in current buffer' })
+      vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, { desc = '[/] Fuzzily find in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', 'fb', function()
+      vim.keymap.set('n', '<leader>fb', function()
         builtin.live_grep {
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
@@ -409,7 +401,7 @@ require('lazy').setup({
       end, { desc = '[F]ind [/] in Open [B]uffers' })
 
       -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', 'fn', function()
+      vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[F]ind [N]eovim files' })
     end,
@@ -821,11 +813,12 @@ require('lazy').setup({
           floats = 'transparent',
         },
         on_colors = function(colors)
-          -- colors.bg = require('tokyonight.util').darken(colors.bg, 0.55, '#000000')
+          -- colors.bg = require('tokyonight.util').darken(colors.bg, 0.6, '#000000')
           colors.comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
         end,
         on_highlights = function(highlights, colors)
           highlights.DiagnosticUnnecessary = {
+            -- make the same color as the comment
             fg = colors.comment,
           }
         end,
