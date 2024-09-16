@@ -803,16 +803,19 @@ require('lazy').setup({
     init = function()
       -- You can configure highlights by doing something like:
       -- vim.cmd.hi 'Comment gui=none'
+
       require('tokyonight').setup {
-        transparent = true,
+        style = 'night',
         styles = {
           comments = { italic = true },
-          sidebars = 'transparent',
-          floats = 'transparent',
         },
         on_colors = function(colors)
-          -- colors.bg = require('tokyonight.util').darken(colors.bg, 0.6, '#000000')
-          colors.comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
+          local background = require('tokyonight.util').darken(colors.bg, 0.6, '#000000')
+          local comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
+          colors.bg = background
+          colors.bg_sidebar = background
+          colors.bg_float = background
+          colors.comment = comment
         end,
         on_highlights = function(highlights, colors)
           highlights.DiagnosticUnnecessary = {
