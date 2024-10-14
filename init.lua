@@ -154,7 +154,7 @@ vim.opt.cursorline = true
 vim.opt.guicursor = 'n-v-c-i:block'
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 9
+vim.opt.scrolloff = 5
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -293,6 +293,10 @@ require('lazy').setup({
         {
           mode = { 'v' },
           { '<leader>h', group = 'Git [h]unk' },
+        },
+        {
+          mode = { 'n', 'v' },
+          { '<leader>s', group = '[s]urround' },
         },
       }
     end,
@@ -579,6 +583,8 @@ require('lazy').setup({
           },
         },
         clangd = {},
+        -- sqls = {},
+        -- sqlfluff = {},
         stylua = {},
         gopls = {},
         goimports = {},
@@ -637,6 +643,11 @@ require('lazy').setup({
           clear_suggestion = '<C-e>',
           accept_word = '<C-l>',
         },
+        condition = function()
+          local dir = vim.fn.expand '%:p:h'
+          return vim.startswith(dir, '/home/aaron/uni')
+          -- return true
+        end,
       }
     end,
   },
@@ -667,6 +678,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         go = { 'goimports' },
+        -- sql = { 'sqlfluff' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -802,7 +814,7 @@ require('lazy').setup({
 
     init = function()
       -- You can configure highlights by doing something like:
-      -- vim.cmd.hi 'Comment gui=none'
+      vim.cmd.hi 'Comment gui=none'
 
       require('tokyonight').setup {
         style = 'night',
@@ -810,11 +822,12 @@ require('lazy').setup({
           comments = { italic = true },
         },
         on_colors = function(colors)
-          local background = require('tokyonight.util').darken(colors.bg, 0.6, '#000000')
-          local comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
+          local background = require('tokyonight.util').darken(colors.bg, 0.62, '#000000')
           colors.bg = background
           colors.bg_sidebar = background
           colors.bg_float = background
+
+          local comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
           colors.comment = comment
         end,
         on_highlights = function(highlights, colors)
@@ -846,22 +859,24 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      require('mini.surround').setup {
+        -- Module mappings. Use `''` (empty string) to disable one.
+        mappings = {
+          add = '<leader>sa', -- Add surrounding
+          delete = '<leader>sd', -- Delete surrounding
+          find = '<leader>sf', -- Find surrounding (to the right)
+          find_left = '<leader>sF', -- Find surrounding (to the left)
+          highlight = '<leader>sh', -- Highlight surrounding
+          replace = '<leader>sr', -- Replace surrounding
+          update_n_lines = '<leader>sn', -- Update `n_lines`
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+          suffix_last = 'p', -- Suffix to search with "prev" method
+          suffix_next = 'n', -- Suffix to search with "next" method
+        },
 
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
+        -- Number of lines within which surrounding is searched
+        n_lines = 20,
+      }
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
