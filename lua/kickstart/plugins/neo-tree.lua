@@ -25,9 +25,8 @@ return {
       filtered_items = {
         visible = true,
       },
-      -- hijack_netrw_behavior = 'open_default',
+      hijack_netrw_behavior = 'disabled',
       use_libuv_file_watcher = true,
-      -- hijack_unnamed_buffer_when_opening = true,
       show_untracked = true,
     },
   },
