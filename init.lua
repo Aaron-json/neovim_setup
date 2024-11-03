@@ -488,13 +488,9 @@ require('lazy').setup({
           --  the definition of its *type*, not where it was *defined*.
           map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
 
-          -- Fuzzy find all the symbols in your current document.
-          --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          map('<leader>fs', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -585,12 +581,15 @@ require('lazy').setup({
           },
         },
         clangd = {},
-        -- sqls = {},
-        -- sqlfluff = {},
         stylua = {},
         gopls = {},
         goimports = {},
+        -- python
+        isort = {},
+        black = {},
+        pylsp = {},
         -- pyright = {},
+        -- rust
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -598,6 +597,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
+        --
         ts_ls = {},
         --css
         cssls = {},
@@ -648,7 +648,6 @@ require('lazy').setup({
         condition = function()
           local dir = vim.fn.expand '%:p:h'
           return vim.startswith(dir, '/home/aaron/uni')
-          -- return true
         end,
       }
     end,
@@ -682,7 +681,7 @@ require('lazy').setup({
         go = { 'goimports' },
         -- sql = { 'sqlfluff' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -806,43 +805,7 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000,
-
-    init = function()
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-
-      require('tokyonight').setup {
-        style = 'night',
-        styles = {
-          comments = { italic = true },
-        },
-        on_colors = function(colors)
-          local background = require('tokyonight.util').darken(colors.bg, 0.62, '#000000')
-          colors.bg = background
-          colors.bg_sidebar = background
-          colors.bg_float = background
-
-          local comment = require('tokyonight.util').lighten(colors.blue0, 0.5, colors.fg)
-          colors.comment = comment
-        end,
-        on_highlights = function(highlights, colors)
-          highlights.DiagnosticUnnecessary = {
-            -- make the same color as the comment
-            fg = colors.comment,
-          }
-        end,
-      }
-      vim.cmd.colorscheme 'tokyonight'
-    end,
-  },
-  -- Highlight todo, notes, etc in comments
+    -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
